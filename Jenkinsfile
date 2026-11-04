@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -10,7 +11,9 @@ pipeline {
 
         stage('Validate Python') {
             steps {
-                sh 'docker run --rm -v "$WORKSPACE:/app" -w /app python:3.11-slim python -m py_compile app.py'
+                sh '''
+                    docker run --rm -i python:3.11-slim python -c "import sys; compile(sys.stdin.read(), 'app.py', 'exec')" < app.py
+                '''
             }
         }
 
